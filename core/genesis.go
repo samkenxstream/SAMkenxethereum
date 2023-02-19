@@ -157,7 +157,7 @@ func (ga *GenesisAlloc) flush(db ethdb.Database, triedb *trie.Database) error {
 	}
 	// Commit newly generated states into disk if it's not empty.
 	if root != types.EmptyRootHash {
-		if err := triedb.Commit(root, true, nil); err != nil {
+		if err := triedb.Commit(root, true); err != nil {
 			return err
 		}
 	}
@@ -189,8 +189,6 @@ func CommitGenesisState(db ethdb.Database, triedb *trie.Database, hash common.Ha
 		switch hash {
 		case params.MainnetGenesisHash:
 			genesis = DefaultGenesisBlock()
-		case params.RopstenGenesisHash:
-			genesis = DefaultRopstenGenesisBlock()
 		case params.RinkebyGenesisHash:
 			genesis = DefaultRinkebyGenesisBlock()
 		case params.GoerliGenesisHash:
@@ -269,7 +267,7 @@ func (e *GenesisMismatchError) Error() string {
 
 // ChainOverrides contains the changes to chain config.
 type ChainOverrides struct {
-	OverrideShanghai *big.Int
+	OverrideShanghai *uint64
 }
 
 // SetupGenesisBlock writes or updates the genesis block in db.
@@ -319,7 +317,7 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *trie.Database, gen
 	// We have the genesis block in database(perhaps in ancient database)
 	// but the corresponding state is missing.
 	header := rawdb.ReadHeader(db, stored, 0)
-	if _, err := state.New(header.Root, state.NewDatabaseWithNodeDB(db, triedb), nil); err != nil {
+	if header.Root != types.EmptyRootHash && !rawdb.HasLegacyTrieNode(db, header.Root) {
 		if genesis == nil {
 			genesis = DefaultGenesisBlock()
 		}
@@ -423,8 +421,6 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 		return g.Config
 	case ghash == params.MainnetGenesisHash:
 		return params.MainnetChainConfig
-	case ghash == params.RopstenGenesisHash:
-		return params.RopstenChainConfig
 	case ghash == params.SepoliaGenesisHash:
 		return params.SepoliaChainConfig
 	case ghash == params.RinkebyGenesisHash:
@@ -469,7 +465,12 @@ func (g *Genesis) ToBlock() *types.Block {
 			head.BaseFee = new(big.Int).SetUint64(params.InitialBaseFee)
 		}
 	}
-	return types.NewBlock(head, nil, nil, nil, trie.NewStackTrie(nil))
+	var withdrawals []*types.Withdrawal
+	if g.Config != nil && g.Config.IsShanghai(g.Timestamp) {
+		head.WithdrawalsHash = &types.EmptyRootHash
+		withdrawals = make([]*types.Withdrawal, 0)
+	}
+	return types.NewBlock(head, nil, nil, nil, trie.NewStackTrie(nil)).WithWithdrawals(withdrawals)
 }
 
 // Commit writes the block and state of a genesis specification to the database.
@@ -527,18 +528,6 @@ func DefaultGenesisBlock() *Genesis {
 		GasLimit:   5000,
 		Difficulty: big.NewInt(17179869184),
 		Alloc:      decodePrealloc(mainnetAllocData),
-	}
-}
-
-// DefaultRopstenGenesisBlock returns the Ropsten network genesis block.
-func DefaultRopstenGenesisBlock() *Genesis {
-	return &Genesis{
-		Config:     params.RopstenChainConfig,
-		Nonce:      66,
-		ExtraData:  hexutil.MustDecode("0x3535353535353535353535353535353535353535353535353535353535353535"),
-		GasLimit:   16777216,
-		Difficulty: big.NewInt(1048576),
-		Alloc:      decodePrealloc(ropstenAllocData),
 	}
 }
 

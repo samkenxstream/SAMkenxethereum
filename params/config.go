@@ -28,7 +28,6 @@ import (
 // Genesis hashes to enforce below configs on.
 var (
 	MainnetGenesisHash = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
-	RopstenGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
 	SepoliaGenesisHash = common.HexToHash("0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9")
 	RinkebyGenesisHash = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
 	GoerliGenesisHash  = common.HexToHash("0xbf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a")
@@ -38,7 +37,6 @@ var (
 // the chain it belongs to.
 var TrustedCheckpoints = map[common.Hash]*TrustedCheckpoint{
 	MainnetGenesisHash: MainnetTrustedCheckpoint,
-	RopstenGenesisHash: RopstenTrustedCheckpoint,
 	SepoliaGenesisHash: SepoliaTrustedCheckpoint,
 	RinkebyGenesisHash: RinkebyTrustedCheckpoint,
 	GoerliGenesisHash:  GoerliTrustedCheckpoint,
@@ -48,10 +46,11 @@ var TrustedCheckpoints = map[common.Hash]*TrustedCheckpoint{
 // the chain it belongs to.
 var CheckpointOracles = map[common.Hash]*CheckpointOracleConfig{
 	MainnetGenesisHash: MainnetCheckpointOracle,
-	RopstenGenesisHash: RopstenCheckpointOracle,
 	RinkebyGenesisHash: RinkebyCheckpointOracle,
 	GoerliGenesisHash:  GoerliCheckpointOracle,
 }
+
+func newUint64(val uint64) *uint64 { return &val }
 
 var (
 	MainnetTerminalTotalDifficulty, _ = new(big.Int).SetString("58_750_000_000_000_000_000_000", 0)
@@ -82,10 +81,10 @@ var (
 
 	// MainnetTrustedCheckpoint contains the light client trusted checkpoint for the main network.
 	MainnetTrustedCheckpoint = &TrustedCheckpoint{
-		SectionIndex: 471,
-		SectionHead:  common.HexToHash("0xa03d6354f5ca8d33203bb646ac26a964f240ee54728dcb7483faff0204ec4c9b"),
-		CHTRoot:      common.HexToHash("0x29efeeea3540b7f499b4214d5262bd1fcd87253de10a878f92e6497d848b186f"),
-		BloomRoot:    common.HexToHash("0x2ff6a93ff5e78e823bfc80c6ec856bfe9b20c4ffd0af3cef644a916eabcd3c84"),
+		SectionIndex: 506,
+		SectionHead:  common.HexToHash("0x3d1a139a6fc7764211236ef7c64d9e8c1fe55b358d7414e25277bac1144486cd"),
+		CHTRoot:      common.HexToHash("0xef7fc3321a239a54238593bdf68d82933d903cb533b0d03228a8d958cd35ea77"),
+		BloomRoot:    common.HexToHash("0x51d7bfe7c6397b1caa8b1cb046de4aeaf7e7fbd3fb6c726b60bf750de78809e8"),
 	}
 
 	// MainnetCheckpointOracle contains a set of configs for the main network oracle.
@@ -93,49 +92,6 @@ var (
 		Address: common.HexToAddress("0x9a9070028361F7AAbeB3f2F2Dc07F82C4a98A02a"),
 		Signers: []common.Address{
 			common.HexToAddress("0x1b2C260efc720BE89101890E4Db589b44E950527"), // Peter
-			common.HexToAddress("0x78d1aD571A1A09D60D9BBf25894b44e4C8859595"), // Martin
-			common.HexToAddress("0x286834935f4A8Cfb4FF4C77D5770C2775aE2b0E7"), // Zsolt
-			common.HexToAddress("0xb86e2B0Ab5A4B1373e40c51A7C712c70Ba2f9f8E"), // Gary
-			common.HexToAddress("0x0DF8fa387C602AE62559cC4aFa4972A7045d6707"), // Guillaume
-		},
-		Threshold: 2,
-	}
-
-	// RopstenChainConfig contains the chain parameters to run a node on the Ropsten test network.
-	RopstenChainConfig = &ChainConfig{
-		ChainID:                       big.NewInt(3),
-		HomesteadBlock:                big.NewInt(0),
-		DAOForkBlock:                  nil,
-		DAOForkSupport:                true,
-		EIP150Block:                   big.NewInt(0),
-		EIP150Hash:                    common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d"),
-		EIP155Block:                   big.NewInt(10),
-		EIP158Block:                   big.NewInt(10),
-		ByzantiumBlock:                big.NewInt(1_700_000),
-		ConstantinopleBlock:           big.NewInt(4_230_000),
-		PetersburgBlock:               big.NewInt(4_939_394),
-		IstanbulBlock:                 big.NewInt(6_485_846),
-		MuirGlacierBlock:              big.NewInt(7_117_117),
-		BerlinBlock:                   big.NewInt(9_812_189),
-		LondonBlock:                   big.NewInt(10_499_401),
-		TerminalTotalDifficulty:       new(big.Int).SetUint64(50_000_000_000_000_000),
-		TerminalTotalDifficultyPassed: true,
-		Ethash:                        new(EthashConfig),
-	}
-
-	// RopstenTrustedCheckpoint contains the light client trusted checkpoint for the Ropsten test network.
-	RopstenTrustedCheckpoint = &TrustedCheckpoint{
-		SectionIndex: 393,
-		SectionHead:  common.HexToHash("0x04479087c89428c6ed0d4ff25642776f0c35747d8ecef90547fa3ce4ebec8606"),
-		CHTRoot:      common.HexToHash("0xaa100968cebe48dba3a8f196f044db04113d5a938ff083838ce6f2c588d416ad"),
-		BloomRoot:    common.HexToHash("0xb9108d510c4b50b60793feead27620781bc1c2164e072d8022201c4eb7c36ba0"),
-	}
-
-	// RopstenCheckpointOracle contains a set of configs for the Ropsten test network oracle.
-	RopstenCheckpointOracle = &CheckpointOracleConfig{
-		Address: common.HexToAddress("0xEF79475013f154E6A65b54cB2742867791bf0B84"),
-		Signers: []common.Address{
-			common.HexToAddress("0x32162F3581E88a5f62e8A61892B42C46E2c18f7b"), // Peter
 			common.HexToAddress("0x78d1aD571A1A09D60D9BBf25894b44e4C8859595"), // Martin
 			common.HexToAddress("0x286834935f4A8Cfb4FF4C77D5770C2775aE2b0E7"), // Zsolt
 			common.HexToAddress("0xb86e2B0Ab5A4B1373e40c51A7C712c70Ba2f9f8E"), // Gary
@@ -163,6 +119,7 @@ var (
 		TerminalTotalDifficulty:       big.NewInt(17_000_000_000_000_000),
 		TerminalTotalDifficultyPassed: true,
 		MergeNetsplitBlock:            big.NewInt(1735371),
+		ShanghaiTime:                  newUint64(1677557088),
 		Ethash:                        new(EthashConfig),
 	}
 
@@ -200,10 +157,10 @@ var (
 
 	// RinkebyTrustedCheckpoint contains the light client trusted checkpoint for the Rinkeby test network.
 	RinkebyTrustedCheckpoint = &TrustedCheckpoint{
-		SectionIndex: 344,
-		SectionHead:  common.HexToHash("0x06bb973aecce633df8cda532ff75b9d0b38c16de2545f52eaf745f858d0fe616"),
-		CHTRoot:      common.HexToHash("0xf1c80b9270ef9fb7907362bca006f8349f0c38d45b83167b57638f54211c6aca"),
-		BloomRoot:    common.HexToHash("0xd72187253f49bce9d471f5e0ddf2b5008ba695d7a1be1192d52fb4d8b01970c6"),
+		SectionIndex: 373,
+		SectionHead:  common.HexToHash("0x09f6d8f0d08d61025ccf4578dc214220b78013841470d445ed86faab4a5a885a"),
+		CHTRoot:      common.HexToHash("0xef72902b944a111e9fdfee5fb69a5e46f68bf11a1f0bd430321f92d6b66987df"),
+		BloomRoot:    common.HexToHash("0xd0120268729c51dd6fa2714f7f88527adfecbdb08592c671233ad2e0ad7cd835"),
 	}
 
 	// RinkebyCheckpointOracle contains a set of configs for the Rinkeby test network oracle.
@@ -383,13 +340,12 @@ var (
 		Ethash:                        new(EthashConfig),
 		Clique:                        nil,
 	}
-	TestRules = TestChainConfig.Rules(new(big.Int), false, new(big.Int))
+	TestRules = TestChainConfig.Rules(new(big.Int), false, 0)
 )
 
 // NetworkNames are user friendly names to use in the chain spec banner.
 var NetworkNames = map[string]string{
 	MainnetChainConfig.ChainID.String(): "mainnet",
-	RopstenChainConfig.ChainID.String(): "ropsten",
 	RinkebyChainConfig.ChainID.String(): "rinkeby",
 	GoerliChainConfig.ChainID.String():  "goerli",
 	SepoliaChainConfig.ChainID.String(): "sepolia",
@@ -476,9 +432,9 @@ type ChainConfig struct {
 
 	// Fork scheduling was switched from blocks to timestamps here
 
-	ShanghaiTime *big.Int `json:"shanghaiTime,omitempty"` // Shanghai switch time (nil = no fork, 0 = already on shanghai)
-	CancunTime   *big.Int `json:"cancunTime,omitempty"`   // Cancun switch time (nil = no fork, 0 = already on cancun)
-	PragueTime   *big.Int `json:"pragueTime,omitempty"`   // Prague switch time (nil = no fork, 0 = already on prague)
+	ShanghaiTime *uint64 `json:"shanghaiTime,omitempty"` // Shanghai switch time (nil = no fork, 0 = already on shanghai)
+	CancunTime   *uint64 `json:"cancunTime,omitempty"`   // Cancun switch time (nil = no fork, 0 = already on cancun)
+	PragueTime   *uint64 `json:"pragueTime,omitempty"`   // Prague switch time (nil = no fork, 0 = already on prague)
 
 	// TerminalTotalDifficulty is the amount of total difficulty reached by
 	// the network that triggers the consensus upgrade.
@@ -591,13 +547,13 @@ func (c *ChainConfig) Description() string {
 	// Create a list of forks post-merge
 	banner += "Post-Merge hard forks (timestamp based):\n"
 	if c.ShanghaiTime != nil {
-		banner += fmt.Sprintf(" - Shanghai:                    @%-10v (https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md)\n", c.ShanghaiTime)
+		banner += fmt.Sprintf(" - Shanghai:                    @%-10v (https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md)\n", *c.ShanghaiTime)
 	}
 	if c.CancunTime != nil {
-		banner += fmt.Sprintf(" - Cancun:                      @%-10v\n", c.CancunTime)
+		banner += fmt.Sprintf(" - Cancun:                      @%-10v\n", *c.CancunTime)
 	}
 	if c.PragueTime != nil {
-		banner += fmt.Sprintf(" - Prague:                      @%-10v\n", c.PragueTime)
+		banner += fmt.Sprintf(" - Prague:                      @%-10v\n", *c.PragueTime)
 	}
 	return banner
 }
@@ -683,17 +639,17 @@ func (c *ChainConfig) IsTerminalPoWBlock(parentTotalDiff *big.Int, totalDiff *bi
 }
 
 // IsShanghai returns whether time is either equal to the Shanghai fork time or greater.
-func (c *ChainConfig) IsShanghai(time *big.Int) bool {
+func (c *ChainConfig) IsShanghai(time uint64) bool {
 	return isTimestampForked(c.ShanghaiTime, time)
 }
 
 // IsCancun returns whether num is either equal to the Cancun fork time or greater.
-func (c *ChainConfig) IsCancun(time *big.Int) bool {
+func (c *ChainConfig) IsCancun(time uint64) bool {
 	return isTimestampForked(c.CancunTime, time)
 }
 
 // IsPrague returns whether num is either equal to the Prague fork time or greater.
-func (c *ChainConfig) IsPrague(time *big.Int) bool {
+func (c *ChainConfig) IsPrague(time uint64) bool {
 	return isTimestampForked(c.PragueTime, time)
 }
 
@@ -702,7 +658,7 @@ func (c *ChainConfig) IsPrague(time *big.Int) bool {
 func (c *ChainConfig) CheckCompatible(newcfg *ChainConfig, height uint64, time uint64) *ConfigCompatError {
 	var (
 		bhead = new(big.Int).SetUint64(height)
-		btime = new(big.Int).SetUint64(time)
+		btime = time
 	)
 	// Iterate checkCompatible to find the lowest conflict.
 	var lasterr *ConfigCompatError
@@ -714,7 +670,7 @@ func (c *ChainConfig) CheckCompatible(newcfg *ChainConfig, height uint64, time u
 		lasterr = err
 
 		if err.RewindToTime > 0 {
-			btime.SetUint64(err.RewindToTime)
+			btime = err.RewindToTime
 		} else {
 			bhead.SetUint64(err.RewindToBlock)
 		}
@@ -728,7 +684,7 @@ func (c *ChainConfig) CheckConfigForkOrder() error {
 	type fork struct {
 		name      string
 		block     *big.Int // forks up to - and including the merge - were defined with block numbers
-		timestamp *big.Int // forks after the merge are scheduled using timestamps
+		timestamp *uint64  // forks after the merge are scheduled using timestamps
 		optional  bool     // if true, the fork may be nil and next fork is still allowed
 	}
 	var lastFork fork
@@ -769,7 +725,7 @@ func (c *ChainConfig) CheckConfigForkOrder() error {
 				if lastFork.block != nil && lastFork.block.Cmp(cur.block) > 0 {
 					return fmt.Errorf("unsupported fork ordering: %v enabled at block %v, but %v enabled at block %v",
 						lastFork.name, lastFork.block, cur.name, cur.block)
-				} else if lastFork.timestamp != nil && lastFork.timestamp.Cmp(cur.timestamp) > 0 {
+				} else if lastFork.timestamp != nil && *lastFork.timestamp > *cur.timestamp {
 					return fmt.Errorf("unsupported fork ordering: %v enabled at timestamp %v, but %v enabled at timestamp %v",
 						lastFork.name, lastFork.timestamp, cur.name, cur.timestamp)
 				}
@@ -789,7 +745,7 @@ func (c *ChainConfig) CheckConfigForkOrder() error {
 	return nil
 }
 
-func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, headNumber *big.Int, headTimestamp *big.Int) *ConfigCompatError {
+func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, headNumber *big.Int, headTimestamp uint64) *ConfigCompatError {
 	if isForkBlockIncompatible(c.HomesteadBlock, newcfg.HomesteadBlock, headNumber) {
 		return newBlockCompatError("Homestead fork block", c.HomesteadBlock, newcfg.HomesteadBlock)
 	}
@@ -895,28 +851,28 @@ func configBlockEqual(x, y *big.Int) bool {
 
 // isForkTimestampIncompatible returns true if a fork scheduled at timestamp s1
 // cannot be rescheduled to timestamp s2 because head is already past the fork.
-func isForkTimestampIncompatible(s1, s2, head *big.Int) bool {
+func isForkTimestampIncompatible(s1, s2 *uint64, head uint64) bool {
 	return (isTimestampForked(s1, head) || isTimestampForked(s2, head)) && !configTimestampEqual(s1, s2)
 }
 
 // isTimestampForked returns whether a fork scheduled at timestamp s is active
 // at the given head timestamp. Whilst this method is the same as isBlockForked,
 // they are explicitly separate for clearer reading.
-func isTimestampForked(s, head *big.Int) bool {
-	if s == nil || head == nil {
+func isTimestampForked(s *uint64, head uint64) bool {
+	if s == nil {
 		return false
 	}
-	return s.Cmp(head) <= 0
+	return *s <= head
 }
 
-func configTimestampEqual(x, y *big.Int) bool {
+func configTimestampEqual(x, y *uint64) bool {
 	if x == nil {
 		return y == nil
 	}
 	if y == nil {
 		return x == nil
 	}
-	return x.Cmp(y) == 0
+	return *x == *y
 }
 
 // ConfigCompatError is raised if the locally-stored blockchain is initialised with a
@@ -928,7 +884,7 @@ type ConfigCompatError struct {
 	StoredBlock, NewBlock *big.Int
 
 	// timestamps of the stored and new configurations if time based forking
-	StoredTime, NewTime *big.Int
+	StoredTime, NewTime *uint64
 
 	// the block number to which the local chain must be rewound to correct the error
 	RewindToBlock uint64
@@ -959,12 +915,12 @@ func newBlockCompatError(what string, storedblock, newblock *big.Int) *ConfigCom
 	return err
 }
 
-func newTimestampCompatError(what string, storedtime, newtime *big.Int) *ConfigCompatError {
-	var rew *big.Int
+func newTimestampCompatError(what string, storedtime, newtime *uint64) *ConfigCompatError {
+	var rew *uint64
 	switch {
 	case storedtime == nil:
 		rew = newtime
-	case newtime == nil || storedtime.Cmp(newtime) < 0:
+	case newtime == nil || *storedtime < *newtime:
 		rew = storedtime
 	default:
 		rew = newtime
@@ -975,8 +931,8 @@ func newTimestampCompatError(what string, storedtime, newtime *big.Int) *ConfigC
 		NewTime:      newtime,
 		RewindToTime: 0,
 	}
-	if rew != nil && rew.Sign() > 0 {
-		err.RewindToTime = rew.Uint64() - 1
+	if rew != nil {
+		err.RewindToTime = *rew - 1
 	}
 	return err
 }
@@ -1002,7 +958,7 @@ type Rules struct {
 }
 
 // Rules ensures c's ChainID is not nil.
-func (c *ChainConfig) Rules(num *big.Int, isMerge bool, timestamp *big.Int) Rules {
+func (c *ChainConfig) Rules(num *big.Int, isMerge bool, timestamp uint64) Rules {
 	chainID := c.ChainID
 	if chainID == nil {
 		chainID = new(big.Int)

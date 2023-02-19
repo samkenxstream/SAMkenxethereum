@@ -17,9 +17,9 @@
 package miner
 
 import (
+	"crypto/rand"
 	"errors"
 	"math/big"
-	"math/rand"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -105,8 +105,6 @@ func init() {
 		GasPrice: big.NewInt(params.InitialBaseFee),
 	})
 	newTxs = append(newTxs, tx2)
-
-	rand.Seed(time.Now().UnixNano())
 }
 
 // testWorkerBackend implements worker.Backend interfaces and wraps all information needed during the testing.
@@ -637,7 +635,7 @@ func testGetSealingWork(t *testing.T, chainConfig *params.ChainConfig, engine co
 
 	// This API should work even when the automatic sealing is not enabled
 	for _, c := range cases {
-		block, _, err := w.getSealingBlock(c.parent, timestamp, c.coinbase, c.random, false)
+		block, _, err := w.getSealingBlock(c.parent, timestamp, c.coinbase, c.random, nil, false)
 		if c.expectErr {
 			if err == nil {
 				t.Error("Expect error but get nil")
@@ -653,7 +651,7 @@ func testGetSealingWork(t *testing.T, chainConfig *params.ChainConfig, engine co
 	// This API should work even when the automatic sealing is enabled
 	w.start()
 	for _, c := range cases {
-		block, _, err := w.getSealingBlock(c.parent, timestamp, c.coinbase, c.random, false)
+		block, _, err := w.getSealingBlock(c.parent, timestamp, c.coinbase, c.random, nil, false)
 		if c.expectErr {
 			if err == nil {
 				t.Error("Expect error but get nil")
