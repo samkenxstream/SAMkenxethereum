@@ -19,7 +19,6 @@ require (
 	github.com/deckarep/golang-set/v2 v2.1.0
 	github.com/docker/docker v1.6.2
 	github.com/dop251/goja v0.0.0-20230122112309-96b1610dd4f7
-	github.com/edsrzf/mmap-go v1.0.0
 	github.com/ethereum/c-kzg-4844 v0.2.0
 	github.com/fatih/color v1.7.0
 	github.com/fjl/gencodec v0.0.0-20220412091415-8bb9e558978c
@@ -60,11 +59,11 @@ require (
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli/v2 v2.17.2-0.20221006022127-8f469abc00aa
-	golang.org/x/crypto v0.1.0
+	golang.org/x/crypto v0.14.0
 	golang.org/x/exp v0.0.0-20230206171751-46f607a40771
 	golang.org/x/sync v0.1.0
-	golang.org/x/sys v0.7.0
-	golang.org/x/text v0.8.0
+	golang.org/x/sys v0.13.0
+	golang.org/x/text v0.13.0
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af
 	golang.org/x/tools v0.7.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -121,7 +120,7 @@ require (
 	github.com/tklauser/numcpus v0.2.2 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/mod v0.9.0 // indirect
-	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
